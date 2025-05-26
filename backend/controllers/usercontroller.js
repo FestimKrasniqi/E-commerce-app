@@ -1,5 +1,7 @@
 const user = require('../models/User');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 
 const registerUser = async (req, res)  => {
     const { name, email, password, role } = req.body;
@@ -99,11 +101,93 @@ const getAllUsers = async (req, res) => {
     }
 }
 
+const forgetPassword = async (req, res) => {
+    const { email} = req.body;
+
+    try {
+      const existingUser = await user.findOne({ email });
+      if (!existingUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Generate reset token
+      const resetToken = crypto.randomBytes(32).toString("hex");
+      const resetPasswordToken = crypto
+        .createHash("sha256")
+        .update(resetToken)
+        .digest("hex");
+
+        // Set reset token and expiration time
+
+      existingUser.resetPasswordToken = resetPasswordToken;
+      existingUser.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+      await existingUser.save();
+
+      const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+
+      console.log("🔑 Reset Token (use this in Postman):", resetToken);
+
+      const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        auth: {
+          user: "krasniqif937@gmail.com",
+          pass: "rxmixlfunvjlybun",
+        },
+      });
+
+      await transporter.sendMail({
+        to: existingUser.email,
+        subject: "Password Reset Request",
+        text: `You are receiving this email because you (or someone else) has requested the reset of a password. Please click on the following link, or paste this into your browser to complete the process: \n\n ${resetUrl} \n\n If you did not request this, please ignore this email and your password will remain unchanged.`,
+      });
+
+      res.status(200).json({ message: "Reset link sent to your email" });
+    } catch (error) {
+        console.error('Error in forget password:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+
+}
+
+const resetPassword = async (req, res) => {
+    const {token} = req.params;
+    const { password } = req.body;
+
+    try {
+        const resetPasswordToken = crypto.createHash('sha256').update(token).digest('hex');
+        const existingUser = await user.findOne({
+            resetPasswordToken,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        if (!existingUser) {
+            return res.status(400).json({ message: 'Invalid or expired token' });
+        }
+
+        existingUser.password = password;
+        existingUser.resetPasswordToken = undefined;
+        existingUser.resetPasswordExpires = undefined;
+        await existingUser.save();
+        res.status(200).json({ message: 'Password has been reset successfully' });
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
+const logout = (req, res) => {
+    // Invalidate the token on the client side
+    res.status(200).json({ message: 'Logged out successfully' });
+}
 
 
 module.exports = {
     registerUser,
     loginUser,
     getUserProfile,
-    getAllUsers
+    getAllUsers,
+    forgetPassword,
+    resetPassword,
+    logout
 };
