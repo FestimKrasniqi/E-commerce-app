@@ -25,6 +25,23 @@ const accountSchema = new mongoose.Schema({
         required: true
     },
 
+    currency: {
+        type: String,
+        enum: ['USD', 'EUR', 'GBP', 'INR'],
+        default: 'USD',
+        required: true
+    },
+
+    status: {
+        type: String,
+        enum: ['active', 'inactive', 'closed'],
+        default: 'active',
+        required: true
+    },
+
+   
+    
+
 
 }, { timestamps: true });
 

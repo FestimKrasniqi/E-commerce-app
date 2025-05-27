@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 
 const registerUser = async (req, res)  => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, status, profile} = req.body;
 
     try {
         const existingUser = await user.findOne({ email});
@@ -16,7 +16,15 @@ const registerUser = async (req, res)  => {
           name,
           email,
           password,
-          role : role || 'user', // Default to 'user' if no role is provided
+          role : role || 'user',
+          status: status || 'active',
+          profile: {
+            phone: profile?.phone || '',
+            address: profile?.address || '',
+            city: profile?.city || '',
+            country: profile?.country || '',
+            dateOfBirth: profile?.dateOfBirth || null
+          }
         });
         await newUser.save();
         const token = jwt.sign(
@@ -30,6 +38,8 @@ const registerUser = async (req, res)  => {
           name: newUser.name,
           email: newUser.email,
           role: newUser.role,
+          status: newUser.status,
+          profile: newUser.profile,
           token: token,
         });
     } catch (error) {

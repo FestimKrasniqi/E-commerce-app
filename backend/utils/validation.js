@@ -23,6 +23,45 @@ exports.validateUserRegistration = [
         .optional()
         .isIn(['user', 'admin'])
         .withMessage('Role must be either "user" or "admin"'),
+
+    body('status')
+        .optional()
+        .isIn(['active', 'inactive', 'banned'])
+        .withMessage('Status must be either "active", "inactive", or "banned"'),
+
+    body('profile.phone')
+        .optional()
+        .isMobilePhone()
+        .withMessage('Invalid phone number format'),
+
+    body('profile.address')
+        .optional()
+        .isLength({ min: 5 })
+        .withMessage('Address must be at least 5 characters long'),
+
+    body('profile.city')
+        .optional()
+        .isLength({ min: 6 })
+        .withMessage('City must be at least 6 characters long'),
+    
+    body('profile.country')
+        .optional()
+        .isLength({ min: 6 })
+        .withMessage('Country must be at least 6 characters long'),
+
+    body('profile.dateOfBirth')
+        .optional()
+        .isDate()
+        .custom((value) => {
+            const today = new Date();
+            const dob = new Date(value);
+            if (dob >= today) {
+                throw new Error('Date of birth must be in the past');
+            }
+            return true;
+        })
+         .withMessage('Invalid date format'),
+        
     
     (req, res, next) => {
         const errors = validationResult(req);

@@ -27,10 +27,34 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
 
-    // balance: {
-    //   type: Number,
-    //   default: 0,
-    // },
+   status: {
+    type: String,
+    enum: ["active", "inactive", "banned"],
+    default: "active",
+   },
+
+   profile: {
+    phone: {
+      type: String,
+      required: false,
+    },
+    address: {
+      type: String,
+      required: false,
+    },
+    city: {
+      type: String,
+      required: false,
+    },
+    country: {
+      type: String,
+      required: false,
+    },
+    dateOfBirth: {
+      type: Date,
+      required: false,
+    }
+   },
 
     resetPasswordToken: String,
     resetPasswordExpires: Date,

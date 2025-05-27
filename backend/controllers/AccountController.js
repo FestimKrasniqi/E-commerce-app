@@ -7,7 +7,13 @@ const createAccount = async (req, res) => {
    
 
     try {
-        const { accountType } = req.body;
+        const {
+          accountType,
+          balance,
+          currency,
+          status,
+          dailyTransactionLimit,
+        } = req.body;
         const userId = req.user.id;
 
         const accountNumber = Math.floor(1000000000 + Math.random() * 9000000000).toString();
@@ -15,6 +21,10 @@ const createAccount = async (req, res) => {
             userId,
             accountNumber,
             accountType,
+            balance: balance || 0,
+            currency: currency || 'USD',
+            status: status || 'active',
+            dailyTransactionLimit: dailyTransactionLimit || 10000 // Default daily transaction limit
            
         });
 
@@ -62,7 +72,7 @@ const getAllAccounts = async (req, res) => {
 const updateAccount = async (req, res) => {
     try {
         const accountId = req.params.id;
-        const { accountType } = req.body;
+        const { accountType, balance, status, currency, dailyTransactionLimit } = req.body;
         const userId = req.user._id;
 
         const updatedAccount = await account.findById(accountId);
@@ -78,6 +88,10 @@ const updateAccount = async (req, res) => {
 
 
         updatedAccount.accountType = accountType || updatedAccount.accountType;
+        updatedAccount.balance = balance !== undefined ? balance : updatedAccount.balance;
+        updatedAccount.status = status || updatedAccount.status;
+        updatedAccount.currency = currency || updatedAccount.currency;
+        updatedAccount.dailyTransactionLimit = dailyTransactionLimit !== undefined ? dailyTransactionLimit : updatedAccount.dailyTransactionLimit;
         await updatedAccount.save();
 
        
