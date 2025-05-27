@@ -1,0 +1,136 @@
+const account = require('../models/Account');
+// const User = require('../models/User');
+
+
+
+const createAccount = async (req, res) => {
+   
+
+    try {
+        const { accountType } = req.body;
+        const userId = req.user.id;
+
+        const accountNumber = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+        const newAccount = new account({
+            userId,
+            accountNumber,
+            accountType,
+           
+        });
+
+       
+
+        const savedAccount = await newAccount.save();
+        res.status(201).json({
+            message: 'Account created successfully',
+            account: savedAccount
+        });
+
+    } catch (error) {
+        console.error('Error creating account:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+
+
+}
+
+const getMyUserAccount = async (req, res) => {
+    try {
+        const userId = req.user.id; // Use req.user._id if no userId is provided in params
+        const accountfind = await account.findOne({ userId }).populate('userId', 'name email');
+        if (!accountfind) {
+            return res.status(404).json({ message: 'Account not found' });
+        }
+        res.status(200).json(accountfind);
+    } catch (error) {
+        console.error('Error fetching user account:', error);
+        res.status(500).json({ message: 'Server error' });
+}
+
+}
+
+const getAllAccounts = async (req, res) => {
+    try {
+        const accounts = await account.find().populate('userId', 'name email');
+        res.status(200).json(accounts);
+    } catch (error) {
+        console.error('Error fetching all accounts:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
+const updateAccount = async (req, res) => {
+    try {
+        const accountId = req.params.id;
+        const { accountType } = req.body;
+        const userId = req.user._id;
+
+        const updatedAccount = await account.findById(accountId);
+
+        if (!updatedAccount) {
+            return res.status(404).json({ message: 'Account not found ' });
+        }
+
+        if (updatedAccount.userId.toString() !== userId.toString() && req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'You do not have permission to update this account' });
+        }
+
+
+
+        updatedAccount.accountType = accountType || updatedAccount.accountType;
+        await updatedAccount.save();
+
+       
+
+        res.status(200).json({
+            message: 'Account updated successfully',
+            account: updatedAccount
+        });
+
+    } catch (error) {
+        console.error('Error updating account:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
+const deleteAccount = async (req, res) => {
+    try {
+        const accountId = req.params.id;
+        const userId = req.user._id;
+
+       const deletedAccount = await account.findById(accountId);
+
+        if (!deletedAccount) {
+            return res.status(404).json({ message: 'Account not found or you do not have permission to delete it' });
+        }
+
+        if (deletedAccount.userId.toString() !== userId.toString() && req.user.role !== 'admin') {
+            return res.status(403).json({ message: 'You do not have permission to delete this account' });
+        }
+
+        if(deletedAccount.balance > 0) {
+            return res.status(400).json({ message: 'Cannot delete account with a positive balance' });
+        }
+
+        await deletedAccount.deleteOne();
+
+        res.status(200).json({
+            message: 'Account deleted successfully',
+            account: deletedAccount
+        });
+
+    } catch (error) {
+        console.error('Error deleting account:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
+
+
+module.exports = {
+  createAccount,
+  getMyUserAccount,
+  getAllAccounts,
+  updateAccount,
+  deleteAccount,
+};

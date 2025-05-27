@@ -3,7 +3,12 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middleware/auth');
 const { allowRoles } = require("../middleware/role");
-const { validateUserRegistration, validateUserLogin, validateForgetPassword, validateResetPassword } = require('../utils/validation');
+const {
+    validateUserRegistration,
+    validateUserLogin,
+    validateForgetPassword,
+    validateResetPassword
+} = require('../utils/validation');
 
 
 router.post('/register', validateUserRegistration, usercontroller.registerUser);
