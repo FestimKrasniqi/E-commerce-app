@@ -1,5 +1,5 @@
 const account = require('../models/Account');
-// const User = require('../models/User');
+const User = require('../models/User');
 
 
 
@@ -11,10 +11,20 @@ const createAccount = async (req, res) => {
           accountType,
           balance,
           currency,
-          status,
-          dailyTransactionLimit,
+          status
         } = req.body;
         const userId = req.user.id;
+
+        const user = await User.findById(userId);
+        if (!user) {
+          return res.status(404).json({ error: "User not found" });
+        }
+
+
+        if(user && user.status !== 'active') {
+            return res.status(400).json({ error: "This user is not active" });
+        }
+        
 
         const accountNumber = Math.floor(1000000000 + Math.random() * 9000000000).toString();
         const newAccount = new account({
@@ -24,10 +34,10 @@ const createAccount = async (req, res) => {
             balance: balance || 0,
             currency: currency || 'USD',
             status: status || 'active',
-            dailyTransactionLimit: dailyTransactionLimit || 10000 // Default daily transaction limit
            
         });
 
+        
        
 
         const savedAccount = await newAccount.save();
@@ -72,10 +82,11 @@ const getAllAccounts = async (req, res) => {
 const updateAccount = async (req, res) => {
     try {
         const accountId = req.params.id;
-        const { accountType, balance, status, currency, dailyTransactionLimit } = req.body;
+        const { accountType, balance, status, currency } = req.body;
         const userId = req.user._id;
 
         const updatedAccount = await account.findById(accountId);
+       
 
         if (!updatedAccount) {
             return res.status(404).json({ message: 'Account not found ' });
@@ -91,7 +102,6 @@ const updateAccount = async (req, res) => {
         updatedAccount.balance = balance !== undefined ? balance : updatedAccount.balance;
         updatedAccount.status = status || updatedAccount.status;
         updatedAccount.currency = currency || updatedAccount.currency;
-        updatedAccount.dailyTransactionLimit = dailyTransactionLimit !== undefined ? dailyTransactionLimit : updatedAccount.dailyTransactionLimit;
         await updatedAccount.save();
 
        
