@@ -20,37 +20,37 @@ exports.validateUserRegistration = [
     .withMessage("Password must be at least 6 characters long"),
 
   body("role")
-    .optional()
+    .notEmpty()
     .isIn(["user", "admin"])
     .withMessage('Role must be either "user" or "admin"'),
 
   body("status")
-    .optional()
+    .notEmpty()
     .isIn(["active", "inactive", "banned"])
     .withMessage('Status must be either "active", "inactive", or "banned"'),
 
   body("profile.phone")
-    .optional()
+    .notEmpty()
     .isMobilePhone()
     .withMessage("Invalid phone number format"),
 
   body("profile.address")
-    .optional()
+    .notEmpty()
     .isLength({ min: 5 })
     .withMessage("Address must be at least 5 characters long"),
 
   body("profile.city")
-    .optional()
+    .notEmpty()
     .isLength({ min: 4 })
     .withMessage("City must be at least 6 characters long"),
 
   body("profile.country")
-    .optional()
+    .notEmpty()
     .isLength({ min: 6 })
     .withMessage("Country must be at least 6 characters long"),
 
   body("profile.dateOfBirth")
-    .optional()
+    .notEmpty()
     .isDate()
     .isISO8601()
     .withMessage("Date of birth must be a valid ISO8601 date (YYYY-MM-DD)")

@@ -36,23 +36,23 @@ const userSchema = new mongoose.Schema(
    profile: {
     phone: {
       type: String,
-      required: false,
+      required: true,
     },
     address: {
       type: String,
-      required: false,
+      required: true,
     },
     city: {
       type: String,
-      required: false,
+      required: true,
     },
     country: {
       type: String,
-      required: false,
+      required: true,
     },
     dateOfBirth: {
       type: Date,
-      required: false,
+      required: true,
     }
    },
 
