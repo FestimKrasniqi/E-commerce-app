@@ -30,7 +30,7 @@ const createAccount = async (req, res) => {
         const newAccount = new account({
             userId,
             accountNumber,
-            accountType,
+            accountType: accountType || 'checking',
             balance: balance || 0,
             currency: currency || 'USD',
             status: status || 'active',
@@ -81,11 +81,11 @@ const getAllAccounts = async (req, res) => {
 
 const updateAccount = async (req, res) => {
     try {
-        const accountId = req.params.id;
+        const accountid = req.params.accountId;
         const { accountType, balance, status, currency } = req.body;
-        const userId = req.user._id;
+        const userId = req.user.id;
 
-        const updatedAccount = await account.findById(accountId);
+        const updatedAccount = await account.findById(accountid);
        
 
         if (!updatedAccount) {
@@ -119,10 +119,10 @@ const updateAccount = async (req, res) => {
 
 const deleteAccount = async (req, res) => {
     try {
-        const accountId = req.params.id;
-        const userId = req.user._id;
+        const accountid = req.params.accountId;
+        const userId = req.user.id;
 
-       const deletedAccount = await account.findById(accountId);
+       const deletedAccount = await account.findById(accountid);
 
         if (!deletedAccount) {
             return res.status(404).json({ message: 'Account not found or you do not have permission to delete it' });
