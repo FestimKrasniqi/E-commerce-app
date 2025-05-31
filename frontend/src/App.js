@@ -1,18 +1,74 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate
+
+} from "react-router-dom";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
 import ForgetPassword from "./Components/ForgetPassword";
 import ResetPassword from "./Components/ResetPassword";
+import Home from "./Components/Home";
+import AdminDashboard from "./Components/AdminDashboard";
+import ProtectedRoute from "./ProtectRoute";
+import ManageUsers from "./Components/ManageUsers";
+import Profile from "./Components/Profile";
+
 
 const App = () => {
+
+
+
+
   return (
     <Router>
       <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/forget" element={<ForgetPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        
+        <Route path="/" element={<Home />} exact />
+
+
+
+        <Route path="/register" element={<Register />} exact />
+        <Route path="/login" element={<Login />} exact />
+        <Route path="/forget" element={<ForgetPassword />} exact />
+
+        <Route
+          path="/reset-password/:token"
+          element={<ResetPassword />}
+          exact
+        />
+        {/* Protected Admin Route */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+          exact
+        />
+
+        <Route
+          path="/admin/manage-users"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <ManageUsers />
+            </ProtectedRoute>
+          }
+          exact
+        />
+
+        <Route path = "/profile/:uid" element={
+          <ProtectedRoute requiredRole="user">
+            <Profile />
+          </ProtectedRoute>
+        }
+        exact
+        />
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

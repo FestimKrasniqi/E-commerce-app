@@ -1,9 +1,13 @@
 import React from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+
+
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -35,6 +39,11 @@ const Login = () => {
           localStorage.setItem("role", data.role);
           alert("Login successful!");
           resetForm();
+          if(data.role === 'user') {
+            navigate('/')
+          } else if(data.role === 'admin') {
+            navigate("/admin/dashboard");
+          }
         } else {
           alert("Login failed");
         }
