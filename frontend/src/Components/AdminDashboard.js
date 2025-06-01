@@ -41,9 +41,12 @@ const AdminDashboard = () => {
               >
                 Manage Users
               </Link>
-              <button className="list-group-item list-group-item-action">
+              <Link
+                to="/admin/account"
+                className="list-group-item list-group-item-action"
+              >
                 View Accounts
-              </button>
+              </Link>
               <button className="list-group-item list-group-item-action">
                 Approve Transactions
               </button>

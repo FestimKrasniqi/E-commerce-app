@@ -15,7 +15,9 @@ import AdminDashboard from "./Components/AdminDashboard";
 import ProtectedRoute from "./ProtectRoute";
 import ManageUsers from "./Components/ManageUsers";
 import Profile from "./Components/Profile";
-
+import ViewAccounts from "./Components/ViewAdminAccounts";
+import MyAccount from "./Components/MyAccounts";
+import CreateAccount from "./Components/CreateAccount";
 
 const App = () => {
 
@@ -25,10 +27,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        
         <Route path="/" element={<Home />} exact />
-
-
 
         <Route path="/register" element={<Register />} exact />
         <Route path="/login" element={<Login />} exact />
@@ -60,12 +59,44 @@ const App = () => {
           exact
         />
 
-        <Route path = "/profile/:uid" element={
-          <ProtectedRoute requiredRole="user">
-            <Profile />
-          </ProtectedRoute>
-        }
-        exact
+        <Route
+          path="/profile/:uid"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Profile />
+            </ProtectedRoute>
+          }
+          exact
+        />
+
+        <Route
+          path="/admin/account"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <ViewAccounts />
+            </ProtectedRoute>
+          }
+          exact
+        />
+
+        <Route
+          path="/account"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <MyAccount />
+            </ProtectedRoute>
+          }
+          exact
+        />
+
+        <Route
+          path="/create-account"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <CreateAccount />
+            </ProtectedRoute>
+          }
+          exact
         />
 
         <Route path="*" element={<Navigate to="/" replace />} />
