@@ -191,6 +191,73 @@ const logout = (req, res) => {
     res.status(200).json({ message: 'Logged out successfully' });
 }
 
+const updatedUser = async (req,res) => {
+
+const userId = req.params.uid;
+const requestedId = req.user.id;
+
+if(userId.toString() !== requestedId.toString() && req.user.role !== 'admin') {
+  return res
+    .status(403)
+    .json({ message: "Not authorized to update this user" });
+}
+
+try {
+  const updateFields = {
+    name: req.body.name,
+    email: req.body.email,
+    profile: {
+      phone: req.body.profile?.phone,
+      address: req.body.profile?.address,
+      city: req.body.profile?.city,
+      country: req.body.profile?.country,
+      dateOfBirth: req.body.profile?.dateOfBirth
+    }
+  };
+
+  const updatedUser = await user
+    .findByIdAndUpdate(
+      userId,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    )
+    .select("-password");
+
+    res.status(200).json(updatedUser);
+
+
+} catch (error) {
+  console.error("Error updating user:", error);
+  res.status(500).json({ message: "Server error" });
+}
+
+
+}
+
+const deleteUser = async (req, res) => {
+  const userId = req.params.uid;
+  const requesterId = req.user.id;
+  const isAdmin = req.user.role === "admin";
+
+  if (requesterId !== userId && !isAdmin) {
+    return res
+      .status(403)
+      .json({ message: "Not authorized to delete this user" });
+  }
+
+  try {
+    const deletedUser = await user.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 module.exports = {
     registerUser,
@@ -199,5 +266,7 @@ module.exports = {
     getAllUsers,
     forgetPassword,
     resetPassword,
-    logout
+    logout,
+    updatedUser,
+    deleteUser
 };

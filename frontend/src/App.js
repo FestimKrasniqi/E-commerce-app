@@ -15,6 +15,7 @@ import AdminDashboard from "./Components/AdminDashboard";
 import ProtectedRoute from "./ProtectRoute";
 import ManageUsers from "./Components/ManageUsers";
 import Profile from "./Components/Profile";
+import UpdateUser from "./Components/UpdateUser";
 
 
 const App = () => {
@@ -67,7 +68,11 @@ const App = () => {
           exact
         />
 
-        
+        <Route
+          path="/update-user/:uid"
+          element={<UpdateUser /> }
+          exact
+        />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

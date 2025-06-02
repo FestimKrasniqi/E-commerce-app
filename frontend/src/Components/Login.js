@@ -46,9 +46,11 @@ const Login = () => {
           }
         } else {
           alert("Login failed");
+          resetForm();
         }
       } catch (err) {
         alert("Error: " + err.message);
+        resetForm();
       }
     },
   });

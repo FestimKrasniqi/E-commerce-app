@@ -53,10 +53,12 @@ const Register = () => {
           alert("Registration successful!");
           navigation('/login');
           resetForm();
-        } else {
+        } 
+          else {
           alert("Registration failed");
         }
       } catch (err) {
+        console.log('error:',err)
         alert("Error: " + err.message);
       }
     },
