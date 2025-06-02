@@ -207,4 +207,52 @@ exports.validateUserUpdate = [
 ];
 
 
+exports.validateProduct = [
+  body("name").notEmpty().withMessage("Product name is required"),
+  body("description").notEmpty().withMessage("Description is required"),
+  body("price")
+    .isFloat({ gt: 0 })
+    .withMessage("Price must be a positive number"),
+  body("category").notEmpty().withMessage("Category is required"),
+  body("stock")
+    .isInt({ min: 0 })
+    .withMessage("Stock must be a non-negative integer"),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+    next();
+  },
+];
+
+exports.validateProductUpdate = [
+  body("title")
+    .optional()
+    .isLength({ min: 3 })
+    .withMessage("Title must be at least 3 characters long"),
+
+  body("description")
+    .optional()
+    .isLength({ min: 10 })
+    .withMessage("Description must be at least 10 characters long"),
+
+  body("price")
+    .optional()
+    .isFloat({ gt: 0 })
+    .withMessage("Price must be a positive number"),
+
+  body("stock")
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage("Stock must be a non-negative integer"),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    next();
+  },
+];
 
