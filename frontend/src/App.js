@@ -15,9 +15,7 @@ import AdminDashboard from "./Components/AdminDashboard";
 import ProtectedRoute from "./ProtectRoute";
 import ManageUsers from "./Components/ManageUsers";
 import Profile from "./Components/Profile";
-import ViewAccounts from "./Components/ViewAdminAccounts";
-import MyAccount from "./Components/MyAccounts";
-import CreateAccount from "./Components/CreateAccount";
+
 
 const App = () => {
 
@@ -69,35 +67,7 @@ const App = () => {
           exact
         />
 
-        <Route
-          path="/admin/account"
-          element={
-            <ProtectedRoute requiredRole="admin">
-              <ViewAccounts />
-            </ProtectedRoute>
-          }
-          exact
-        />
-
-        <Route
-          path="/account"
-          element={
-            <ProtectedRoute requiredRole="user">
-              <MyAccount />
-            </ProtectedRoute>
-          }
-          exact
-        />
-
-        <Route
-          path="/create-account"
-          element={
-            <ProtectedRoute requiredRole="user">
-              <CreateAccount />
-            </ProtectedRoute>
-          }
-          exact
-        />
+        
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

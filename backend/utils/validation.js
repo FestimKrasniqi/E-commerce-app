@@ -20,14 +20,14 @@ exports.validateUserRegistration = [
     .withMessage("Password must be at least 6 characters long"),
 
   body("role")
-    .notEmpty()
+    .optional()
     .isIn(["user", "admin"])
     .withMessage('Role must be either "user" or "admin"'),
 
   body("status")
-    .notEmpty()
-    .isIn(["active", "inactive", "banned"])
-    .withMessage('Status must be either "active", "inactive", or "banned"'),
+    .optional()
+    .isIn(["active", "inactive"])
+    .withMessage('Status must be either "active" or "inactive"'),
 
   body("profile.phone")
     .notEmpty()

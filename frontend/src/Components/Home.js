@@ -36,7 +36,7 @@ const Home = () => {
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
         <div className="container">
           <Link className="navbar-brand" to="/">
-            Bank System
+           Ecommerce Website
           </Link>
           <button
             className="navbar-toggler"
@@ -107,7 +107,7 @@ const Home = () => {
 
       {/* Main Content */}
       <div className="container text-center mt-5">
-        <h1 className="display-4">Welcome to the Bank System</h1>
+        <h1 className="display-4">Welcome to the Ecommerce website</h1>
         <p className="lead">
           Manage your finances, make transactions, and view your account history
           securely and easily.
