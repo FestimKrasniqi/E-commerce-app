@@ -47,7 +47,7 @@ const ProductDetails = () => {
         </div>
         <div className="col-md-6">
           <h2>{product.name}</h2>
-          <p className="text-muted">${product.price.toFixed(2)}</p>
+          <p className="text-muted">{product.price}€</p>
           <p>{product.description}</p>
           <button className="btn btn-primary mt-3">Add to Cart</button>
         </div>

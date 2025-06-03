@@ -20,6 +20,7 @@ import ManageProducts from "./Components/ManageProducts";
 import CreateProduct from "./Components/CreateProduct";
 import UpdateProduct from "./Components/UpdateProduct";
 import ProductDetails from "./Components/ProductDetails";
+import Products from "./Components/Products";
 
 
 const App = () => {
@@ -109,6 +110,16 @@ const App = () => {
           element={
             <ProtectedRoute requiredRole="user">
               <ProductDetails />
+            </ProtectedRoute>
+          }
+          exact
+        />
+
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <Products />
             </ProtectedRoute>
           }
           exact

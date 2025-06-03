@@ -169,7 +169,7 @@ const Home = () => {
                   <div className="card-body">
                     <h5 className="card-title">{product.name}</h5>
                     <p className="card-text text-muted">
-                      ${product.price}€
+                      {product.price}€
                     </p>
                     <Link
                       to={`/products/${product._id}`}
