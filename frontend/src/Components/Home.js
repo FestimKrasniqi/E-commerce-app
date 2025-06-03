@@ -1,22 +1,23 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { jwtDecode } from "jwt-decode";
 
 
 const Home = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const isLoggedIn = !!localStorage.getItem("token");
   const userRole = localStorage.getItem("role");
-
+  const [products, setProducts] = useState([]);
   let uid = null;
 
-  // Extract UID from JWT token
+  // Decode token for UID
   if (isLoggedIn) {
     try {
       const token = localStorage.getItem("token");
       const decoded = jwtDecode(token);
-      uid = decoded.id || decoded._id || decoded.uid; // Adjust depending on your backend's payload
+      uid = decoded.id || decoded._id || decoded.uid;
     } catch (err) {
       console.error("Failed to decode token:", err);
     }
@@ -25,30 +26,64 @@ const Home = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    localStorage.removeItem("uid"); // just in case
+    localStorage.removeItem("uid");
     alert("Logged out successfully");
     navigate("/login");
   };
 
+  // Fetch sample products for homepage
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const res = await fetch(
+          "http://localhost:4000/api/products/search?limit=4",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = await res.json();
+        setProducts(data.products || []);
+      } catch (err) {
+        console.error("Failed to fetch products", err);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   return (
     <div>
-      {/* Navigation Bar */}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+      {/* Navbar */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
           <Link className="navbar-brand" to="/">
-           Ecommerce Website
+            🛒 ShopZone
           </Link>
           <button
             className="navbar-toggler"
-            type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
+            data-bs-target="#navCollapse"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div className="collapse navbar-collapse" id="navbarNav">
+          <div className="collapse navbar-collapse" id="navCollapse">
             <ul className="navbar-nav ms-auto">
+              <li className="nav-item">
+                <Link className="nav-link" to="/">
+                  Home
+                </Link>
+              </li>
+              {isLoggedIn && (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/products">
+                    Shop
+                  </Link>
+                </li>
+              )}
               {!isLoggedIn ? (
                 <>
                   <li className="nav-item">
@@ -66,33 +101,34 @@ const Home = () => {
                 <>
                   <li className="nav-item">
                     <Link className="nav-link" to={`/profile/${uid}`}>
-                      My Profile
+                      Profile
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/transaction">
-                      Transaction
+                    <Link className="nav-link" to="/cart">
+                      🛒 Cart
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/account">
-                      Account
+                    <Link className="nav-link" to="/orders">
+                      📦 Orders
                     </Link>
                   </li>
+                  {userRole === "admin" && (
+                    <li className="nav-item">
+                      <Link className="nav-link" to="/admin/dashboard">
+                        Admin
+                      </Link>
+                    </li>
+                  )}
                   <li className="nav-item">
-                    <Link className="nav-link" to="/create-account">
-                      Create Account
-                    </Link>
-                  </li>
-
-                  <li className="nav-item">
-                    <span className="nav-link">
-                      Welcome, {userRole || "User"}
+                    <span className="nav-link text-warning">
+                      Welcome, {userRole}
                     </span>
                   </li>
                   <li className="nav-item">
                     <button
-                      className="btn btn-light btn-sm ms-2"
+                      className="btn btn-outline-light btn-sm ms-2"
                       onClick={handleLogout}
                     >
                       Logout
@@ -105,24 +141,56 @@ const Home = () => {
         </div>
       </nav>
 
-      {/* Main Content */}
-      <div className="container text-center mt-5">
-        <h1 className="display-4">Welcome to the Ecommerce website</h1>
+      {/* Hero Section */}
+      <div className="bg-light text-center py-5">
+        <h1 className="display-4 fw-bold">Welcome to ShopZone</h1>
         <p className="lead">
-          Manage your finances, make transactions, and view your account history
-          securely and easily.
+          Discover the best products, great deals & smooth shopping experience.
         </p>
-        {!isLoggedIn && (
-          <div className="mt-4">
-            <Link className="btn btn-primary me-3" to="/login">
-              Login
-            </Link>
-            <Link className="btn btn-outline-primary" to="/register">
-              Sign Up
-            </Link>
-          </div>
-        )}
+        <Link to="/products" className="btn btn-primary btn-lg mt-3">
+          Browse Products
+        </Link>
       </div>
+
+      {/* Featured Products */}
+      <div className="container my-5">
+        <h2 className="mb-4 text-center">Featured Products</h2>
+        <div className="row">
+          {products.length > 0 ? (
+            products.map((product) => (
+              <div className="col-md-3 mb-4" key={product._id}>
+                <div className="card h-100 shadow-sm">
+                  <img
+                    src={"http://localhost:4000/" + product.image}
+                    className="card-img-top"
+                    alt={product.name}
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title">{product.name}</h5>
+                    <p className="card-text text-muted">
+                      ${product.price}€
+                    </p>
+                    <Link
+                      to={`/products/${product._id}`}
+                      className="btn btn-outline-primary w-100"
+                    >
+                      View Details
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-center">No products found.</p>
+          )}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-dark text-white text-center py-3">
+        &copy; {new Date().getFullYear()} ShopZone. All rights reserved.
+      </footer>
     </div>
   );
 };

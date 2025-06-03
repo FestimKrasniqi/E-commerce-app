@@ -1,4 +1,5 @@
 const product = require('../models/Product')
+const fs = require('fs');
 
 const createProduct = async (req,res) => {
     try{
@@ -26,7 +27,7 @@ const createProduct = async (req,res) => {
 const getAllProducts = async (req,res) => {
     try {
         const Product = await product.find()
-        res.status.json(200).json(Product)
+        res.status(200).json(Product)
     } catch (error) {
         console.error("Error fetching products:", error);
         res.status(500).json({ message: "Server error" });
@@ -36,12 +37,12 @@ const getAllProducts = async (req,res) => {
 const getProductById = async(req, res) => {
 
     try {
-        const { productId } = req.params.pid
-        const Product = await product.findById({productId})
+        const productId = req.params.pid
+        const Product = await product.findById(productId)
         if(!Product) {
             res.status(404).json({message : "Product not found"})
         }
-        res.status(200).json(product);
+        res.status(200).json(Product);
     } catch (error) {
         console.error("Error fetching product:", error);
         res.status(500).json({ message: "Server error" });
@@ -82,12 +83,21 @@ const updateProduct = async(req, res) => {
 
 
         try {
-        const deletedProduct = await Product.findByIdAndDelete(req.params.pid);
+        const deletedProduct = await product.findByIdAndDelete(req.params.pid);
         if (!deletedProduct) return res.status(404).json({ message: 'Product not found' });
+
+        const imagePath = deletedProduct.image
+
+        fs.unlink(imagePath, (err) => {
+          console.log(err);
+        });
     
         res.status(200).json({ message: 'Product deleted' });
        
       
+
+
+
          } catch (error) {
         console.error('Error deleting product:', error);
         res.status(500).json({ message: 'Server error' })
@@ -98,36 +108,67 @@ const updateProduct = async(req, res) => {
 const searchAndFilterProducts = async (req, res) => {
 
 
-    try {
-    const { keyword, category, minPrice, maxPrice } = req.query;
+  try {
+    const {
+      keyword,
+      category,
+      minPrice,
+      maxPrice,
+      inStock,
+      sortBy = "createdAt",
+      order = "desc",
+      page = 1,
+      limit = 10,
+    } = req.query;
 
     const filter = {};
 
-    // Search by keyword in title or description
+    // Keyword search (name or description)
     if (keyword) {
       filter.$or = [
-        { name: { $regex: keyword, $options: 'i' } },
-        { description: { $regex: keyword, $options: 'i' } },
+        { name: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
       ];
     }
 
-    // Filter by category
+    // Category filter
     if (category) {
       filter.category = category;
     }
 
-    // Filter by price range
+    // Price range
     if (minPrice || maxPrice) {
       filter.price = {};
-      if (minPrice) filter.price.$gte = parseFloat(minPrice);
-      if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
+      if (minPrice) filter.price.$gte = Number(minPrice);
+      if (maxPrice) filter.price.$lte = Number(maxPrice);
     }
 
-    const products = await product.find(filter);
+    // In-stock only
+    if (inStock === "true") {
+      filter.stock = { $gt: 0 };
+    }
 
-    res.status(200).json(products);
+    // Pagination
+    const skip = (Number(page) - 1) * Number(limit);
+
+    // Total count for frontend pagination
+    const total = await product.countDocuments(filter);
+
+    // Fetch products with filters
+    const products = await product.find(filter)
+      .sort({ [sortBy]: order === "asc" ? 1 : -1 })
+      .skip(skip)
+      .limit(Number(limit));
+
+    res.status(200).json({
+      products,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / Number(limit)),
+    });
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch products', error: err.message });
+    console.error("Search error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 }
 

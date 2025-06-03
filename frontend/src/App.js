@@ -16,6 +16,10 @@ import ProtectedRoute from "./ProtectRoute";
 import ManageUsers from "./Components/ManageUsers";
 import Profile from "./Components/Profile";
 import UpdateUser from "./Components/UpdateUser";
+import ManageProducts from "./Components/ManageProducts";
+import CreateProduct from "./Components/CreateProduct";
+import UpdateProduct from "./Components/UpdateProduct";
+import ProductDetails from "./Components/ProductDetails";
 
 
 const App = () => {
@@ -68,9 +72,45 @@ const App = () => {
           exact
         />
 
+        <Route path="/update-user/:uid" element={<UpdateUser />} exact />
+
         <Route
-          path="/update-user/:uid"
-          element={<UpdateUser /> }
+          path="/admin/products"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <ManageProducts />
+            </ProtectedRoute>
+          }
+          exact
+        />
+
+        <Route
+          path="/create-product"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <CreateProduct />
+            </ProtectedRoute>
+          }
+          exact
+        />
+
+        <Route
+          path="/update-product/:id"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <UpdateProduct />
+            </ProtectedRoute>
+          }
+          exact
+        />
+
+        <Route
+          path="/products/:id"
+          element={
+            <ProtectedRoute requiredRole="user">
+              <ProductDetails />
+            </ProtectedRoute>
+          }
           exact
         />
 
