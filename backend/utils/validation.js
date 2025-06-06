@@ -256,3 +256,139 @@ exports.validateProductUpdate = [
   },
 ];
 
+
+exports.validateCreateOrder = [
+  body("products")
+    .isArray({ min: 1 })
+    .withMessage("Products must be an array with at least one item"),
+  body("products.*.product")
+    .notEmpty()
+    .withMessage("Product name is required")
+    .isString()
+    .withMessage("Product name must be a string"),
+  body("products.*.quantity")
+    .notEmpty()
+    .withMessage("Quantity is required")
+    .isInt({ min: 1 })
+    .withMessage("Quantity must be an integer of at least 1"),
+
+  body("shippingInfo.address")
+    .optional()
+    .isString()
+    .withMessage("Address must be a string"),
+  body("shippingInfo.city")
+    .optional()
+    .isString()
+    .withMessage("City must be a string"),
+  body("shippingInfo.postalCode")
+    .optional()
+    .isString()
+    .withMessage("Postal code must be a string"),
+  body("shippingInfo.country")
+    .optional()
+    .isString()
+    .withMessage("Country must be a string"),
+
+  body("paymentInfo.method")
+    .optional()
+    .isString()
+    .withMessage("Payment method must be a string"),
+
+  body("status")
+    .optional()
+    .isIn(["pending", "processing", "shipped", "delivered", "cancelled"])
+    .withMessage("Invalid order status"),
+
+  body("deliveredAt")
+    .optional()
+    .isISO8601()
+    .withMessage("DeliveredAt must be a valid date")
+    .custom((value) => {
+      const deliveredDate = new Date(value);
+      const now = new Date();
+      if (deliveredDate <= now) {
+        throw new Error("DeliveredAt must be a future date");
+      }
+      return true;
+    }),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+    next();
+  },
+];
+
+
+exports.validateUpdateOrder = [
+  body("products")
+    .optional()
+    .isArray({ min: 1 })
+    .withMessage("Products must be an array with at least one item"),
+  body("products.*.product")
+    .optional()
+    .notEmpty()
+    .withMessage("Product name is required")
+    .isString()
+    .withMessage("Product name must be a string"),
+  body("products.*.quantity")
+    .optional()
+    .notEmpty()
+    .withMessage("Quantity is required")
+    .isInt({ min: 1 })
+    .withMessage("Quantity must be an integer of at least 1"),
+
+  body("shippingInfo.address")
+    .optional()
+    .isString()
+    .withMessage("Address must be a string"),
+  body("shippingInfo.city")
+    .optional()
+    .isString()
+    .withMessage("City must be a string"),
+  body("shippingInfo.postalCode")
+    .optional()
+    .isString()
+    .withMessage("Postal code must be a string"),
+  body("shippingInfo.country")
+    .optional()
+    .isString()
+    .withMessage("Country must be a string"),
+
+  body("paymentInfo.method")
+    .optional()
+    .isString()
+    .withMessage("Payment method must be a string"),
+
+  body("status")
+    .optional()
+    .isIn(["pending", "processing", "shipped", "delivered", "cancelled"])
+    .withMessage("Invalid order status"),
+
+  body("deliveredAt")
+    .optional()
+    .isISO8601()
+    .withMessage("DeliveredAt must be a valid date")
+    .custom((value) => {
+      const deliveredDate = new Date(value);
+      const now = new Date();
+      if (deliveredDate <= now) {
+        throw new Error("DeliveredAt must be a future date");
+      }
+      return true;
+    }),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(400).json({ errors: errors.array() });
+    next();
+  },
+];
+
+
+
+
+
+

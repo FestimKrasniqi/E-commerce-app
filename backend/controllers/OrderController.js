@@ -1,0 +1,187 @@
+const Order = require('../models/Order');
+const Product = require('../models/Product')
+
+
+const getAllOrders = async (req,res) => {
+    try {
+        const order = await Order.find().populate("user","name email").populate("products.product","name price");
+        res.status(200).json(order);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+}
+
+const getOrderById = async (req,res) => {
+    try {
+        const orderId = req.params.oid
+        const order = await Order.findById(orderId).populate("user","name email").populate("products.product","name price")
+        if (!order) {
+          return res.status(404).json({ message: "Order not found" });
+        }
+        res.status(200).json(order)
+
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+}
+
+const getMyOrder = async (req,res) => {
+    try {
+        const order = Order.find({user: req.user.id}).populate('products.product',"name price").sort({createdAt: -1})
+        res.status(200).json(order);
+    } catch (error) {
+      console.error("Error fetching user orders:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+}
+
+const createOrder = async (req,res) => {
+    try {
+        const { products, shippingInfo } = req.body;
+
+        if (!products || products.length === 0) {
+          return res.status(400).json({ message: "No products in order" });
+        }
+
+        const processedProducts = [];
+
+        for (const item of products) {
+          const productDoc = await Product.findOne({ name: item.product });
+    
+          if (!productDoc) {
+            return res.status(404).json({ message: `Product not found: ${item.product}` });
+          }
+    
+          processedProducts.push({
+            product: productDoc._id,
+            quantity: item.quantity,
+          });
+        }
+
+        const order = new Order({
+          user: req.user.id,
+          products: processedProducts,
+          shippingInfo,
+         
+         
+        });
+
+        const savedOrder = await order.save();
+
+        res.status(201).json(savedOrder);
+    
+    } catch (error) {
+        console.error("Error creating order:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+}
+
+const deleteOrder = async (req,res) => {
+    try {
+        const userId = req.user.id;
+        const orderId = req.params.oid
+
+        const order = await Order.findById(orderId);
+
+        if(!order){
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        if(order.user.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "Not authorized to delete this order" });
+        }
+
+        if(order.status === 'delivered' || (order.deliveredAt && new Date() >= new Date(order.deliveredAt))) {
+            return res
+              .status(400)
+              .json({
+                message: "Order cannot be deleted after it is delivered",
+              });
+        }
+
+        await order.deleteOne();
+        res.status(200).json({ message: "Order deleted successfully" });
+    } catch (error) {
+        console.error("Delete order error:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+}
+
+
+const updateOrder = async (req, res) => {
+  try {
+    const orderId = req.params.oid;
+    const userId = req.user.id;
+    const userRole = req.user.role; // assuming role is set in req.user
+    const { products, shippingInfo, paymentInfo, status, deliveredAt } =
+      req.body;
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Check ownership or admin
+    if (order.user.toString() !== userId.toString() && userRole !== "admin") {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to update this order" });
+    }
+
+    // Role-based field update restrictions
+    if (userRole !== "admin") {
+      if (status || paymentInfo || deliveredAt) {
+        return res.status(403).json({
+          message:
+            "Only admins can update order status, payment info, or delivery date",
+        });
+      }
+    }
+
+    // Process products if provided
+    if (products) {
+      const processedProducts = [];
+
+      for (const item of products) {
+        const productDoc = await Product.findOne({ name: item.product });
+        if (!productDoc) {
+          return res
+            .status(404)
+            .json({ message: `Product not found: ${item.product}` });
+        }
+        processedProducts.push({
+          product: productDoc._id,
+          quantity: item.quantity,
+        });
+      }
+      order.products = processedProducts;
+    }
+
+    if (shippingInfo) order.shippingInfo = shippingInfo;
+    if (userRole === "admin" && paymentInfo) order.paymentInfo = paymentInfo;
+    if (userRole === "admin" && status) order.status = status;
+    if (userRole === "admin" && deliveredAt) order.deliveredAt = deliveredAt;
+
+    const updatedOrder = await order.save();
+
+    res.status(200).json(updatedOrder);
+  } catch (err) {
+    console.error("Error updating order:", err);
+    res.status(500).json({ message: err.message || "Server error" });
+  }
+};
+  
+
+
+
+module.exports = {
+    getAllOrders,
+    getOrderById,
+    getMyOrder,
+    createOrder,
+    deleteOrder,
+    updateOrder
+
+}
