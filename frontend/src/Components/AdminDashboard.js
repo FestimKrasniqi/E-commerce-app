@@ -62,6 +62,10 @@ const AdminDashboard = () => {
             >
               📊 Reports & Analytics
             </Link>
+
+            <Link to="/" className="list-group-item list-group-item-action">
+              🏠 Home Page
+            </Link>
           </div>
         </div>
 

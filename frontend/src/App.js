@@ -21,6 +21,10 @@ import CreateProduct from "./Components/CreateProduct";
 import UpdateProduct from "./Components/UpdateProduct";
 import ProductDetails from "./Components/ProductDetails";
 import Products from "./Components/Products";
+import CreateOrder from "./Components/CreateOrder";
+import MyOrders from "./Components/MyOrders";
+import ManageOrders from "./Components/OrdersAdmin";
+import UpdateOrder from "./Components/UpdateOrder";
 
 
 const App = () => {
@@ -63,15 +67,7 @@ const App = () => {
           exact
         />
 
-        <Route
-          path="/profile/:uid"
-          element={
-            <ProtectedRoute requiredRole="user">
-              <Profile />
-            </ProtectedRoute>
-          }
-          exact
-        />
+        <Route path="/profile/:uid" element={<Profile />} exact />
 
         <Route path="/update-user/:uid" element={<UpdateUser />} exact />
 
@@ -105,25 +101,25 @@ const App = () => {
           exact
         />
 
+        <Route path="/products/:id" element={<ProductDetails />} exact />
+
+        <Route path="/products" element={<Products />} exact />
+
+        <Route path="/create-order" element={<CreateOrder />} exact />
+
+        <Route path="/myorders" element={<MyOrders />} exact />
+
         <Route
-          path="/products/:id"
+          path="/admin/orders"
           element={
-            <ProtectedRoute requiredRole="user">
-              <ProductDetails />
+            <ProtectedRoute requiredRole="admin">
+              <ManageOrders />
             </ProtectedRoute>
           }
           exact
         />
 
-        <Route
-          path="/products"
-          element={
-            <ProtectedRoute requiredRole="user">
-              <Products />
-            </ProtectedRoute>
-          }
-          exact
-        />
+        <Route path="/update-order/:id" element={<UpdateOrder />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

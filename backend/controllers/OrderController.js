@@ -29,7 +29,7 @@ const getOrderById = async (req,res) => {
 
 const getMyOrder = async (req,res) => {
     try {
-        const order = Order.find({user: req.user.id}).populate('products.product',"name price").sort({createdAt: -1})
+        const order = await Order.find({user: req.user.id}).populate('products.product',"name price").sort({createdAt: -1})
         res.status(200).json(order);
     } catch (error) {
       console.error("Error fetching user orders:", error);
@@ -48,7 +48,9 @@ const createOrder = async (req,res) => {
         const processedProducts = [];
 
         for (const item of products) {
-          const productDoc = await Product.findOne({ name: item.product });
+          const productDoc = await Product.findOne({
+            name: new RegExp(`^${item.product}$`, "i"),
+          });
     
           if (!productDoc) {
             return res.status(404).json({ message: `Product not found: ${item.product}` });

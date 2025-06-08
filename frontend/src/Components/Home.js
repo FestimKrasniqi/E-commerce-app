@@ -110,8 +110,8 @@ const Home = () => {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/orders">
-                      📦 Orders
+                    <Link className="nav-link" to="/myorders">
+                      📦 My Orders
                     </Link>
                   </li>
                   {userRole === "admin" && (
