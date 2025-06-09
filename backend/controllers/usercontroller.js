@@ -239,7 +239,7 @@ const deleteUser = async (req, res) => {
   const requesterId = req.user.id;
   const isAdmin = req.user.role === "admin";
 
-  if (requesterId !== userId && !isAdmin) {
+  if (requesterId.toString() !== userId.toString() && !isAdmin) {
     return res
       .status(403)
       .json({ message: "Not authorized to delete this user" });
@@ -259,6 +259,17 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const countUsers = async (req,res) => {
+  try {
+    const count = await user.countDocuments();
+    
+    return res.status(200).json(count)
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 module.exports = {
     registerUser,
     loginUser,
@@ -268,5 +279,6 @@ module.exports = {
     resetPassword,
     logout,
     updatedUser,
-    deleteUser
+    deleteUser,
+    countUsers
 };

@@ -126,10 +126,19 @@ const updateOrder = async (req, res) => {
     }
 
     // Check ownership or admin
-    if (order.user.toString() !== userId.toString() && userRole !== "admin") {
+    if (order.user.toString() !== userId.toString() && userRole !== 'admin') {
       return res
         .status(403)
         .json({ message: "Not authorized to update this order" });
+    }
+
+    if (
+      order.status === "delivered" ||
+      (order.deliveredAt && new Date() >= new Date(order.deliveredAt))
+    ) {
+      return res.status(400).json({
+        message: "Order cannot be updated after it is delivered",
+      });
     }
 
     // Role-based field update restrictions
@@ -141,6 +150,9 @@ const updateOrder = async (req, res) => {
         });
       }
     }
+
+   
+
 
     // Process products if provided
     if (products) {
@@ -175,6 +187,16 @@ const updateOrder = async (req, res) => {
   }
 };
   
+const countOrders = async (req,res) => {
+  try {
+    const count = await Order.countDocuments();
+    
+    return res.status(200).json(count)
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
 
 
 
@@ -184,6 +206,7 @@ module.exports = {
     getMyOrder,
     createOrder,
     deleteOrder,
-    updateOrder
+    updateOrder,
+    countOrders
 
 }

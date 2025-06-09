@@ -17,5 +17,6 @@ router.post('/create',authMiddleware,allowRoles("admin"), fileUpload.single('ima
 router.patch('/update/:pid',authMiddleware,allowRoles("admin"), fileUpload.single('image'), validateProductUpdate, productController.updateProduct)
 router.delete('/delete/:pid',authMiddleware,allowRoles("admin"), productController.deleteProduct)
 router.get('/search',authMiddleware,allowRoles('admin','user'),productController.searchAndFilterProducts)
+router.get('/count',authMiddleware,allowRoles('admin'),productController.countProducts);
 
 module.exports = router;

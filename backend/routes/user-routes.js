@@ -20,6 +20,7 @@ router.post('/forget-password',validateForgetPassword, usercontroller.forgetPass
 router.post('/reset-password/:token', validateResetPassword, usercontroller.resetPassword);
 router.patch('/update/:uid',authMiddleware,allowRoles("user","admin"),usercontroller.updatedUser)
 router.delete('/delete/:uid', validateUserUpdate, authMiddleware,allowRoles('user','admin'),usercontroller.deleteUser)
+router.get('/count',authMiddleware,allowRoles('admin'),usercontroller.countUsers)
 // router.post('/logout', authMiddleware,  usercontroller.logoutUser);
 
 module.exports = router;

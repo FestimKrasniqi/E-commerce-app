@@ -17,5 +17,6 @@ router.post(
 );
 router.delete('/delete/:oid',authMiddleware,allowRoles('user','admin'),orderController.deleteOrder);
 router.patch('/update/:oid',validateUpdateOrder,authMiddleware,allowRoles('user','admin'),orderController.updateOrder);
+router.get('/count',authMiddleware,allowRoles('admin'), orderController.countOrders)
 
 module.exports = router;

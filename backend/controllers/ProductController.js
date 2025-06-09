@@ -61,7 +61,7 @@ const updateProduct = async(req, res) => {
         req.params.pid,
         updateData,
         {
-          new: true,
+          new: true
         }
       );
 
@@ -172,6 +172,17 @@ const searchAndFilterProducts = async (req, res) => {
   }
 }
 
+const countProducts = async (req,res) => {
+  try {
+    const count = await product.countDocuments();
+    
+    return res.status(200).json(count)
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 
 module.exports = {
     createProduct,
@@ -179,5 +190,6 @@ module.exports = {
     getProductById,
     updateProduct,
     deleteProduct,
-    searchAndFilterProducts
+    searchAndFilterProducts,
+    countProducts
 }

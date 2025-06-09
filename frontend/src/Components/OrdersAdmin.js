@@ -81,10 +81,10 @@ const ManageOrders = () => {
                 <td>{new Date(order.createdAt).toLocaleDateString()}</td>
                 <td>
                   <button
-                    className="btn btn-primary btn-sm"
+                    className="btn btn-warning btn-sm"
                     onClick={() => handleUpdate(order._id)}
                   >
-                    Update
+                    Edit
                   </button>
                 </td>
               </tr>

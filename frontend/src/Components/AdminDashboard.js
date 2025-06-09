@@ -1,22 +1,95 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
+  const [user,setUser] = useState(0);
+  const [order,setOrder] = useState(0);
+  const [product,setProduct] = useState(0);
 
   useEffect(() => {
     if (!token || role !== "admin") {
       alert("Access denied. Admins only.");
       navigate("/login");
     }
+    fetchUserCount()
+    fetchOrderCount()
+    fetchProductCount()
   }, [navigate, token, role]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     navigate("/login");
+  };
+
+  const fetchUserCount = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      const response = await fetch('http://localhost:4000/api/users/count', {
+        method : 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+
+      });
+      if (response.ok) {
+        const data = await response.json()
+        setUser(data)
+      } else {
+        console.error('Failed to fetch user count')
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  const fetchOrderCount = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:4000/api/orders/count", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setOrder(data);
+      } else {
+        console.error("Failed to fetch order count");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const fetchProductCount = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:4000/api/products/count", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setProduct(data);
+      } else {
+        console.error("Failed to fetch product count");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -82,19 +155,19 @@ const AdminDashboard = () => {
               <div className="col-sm-4">
                 <div className="card text-center p-3">
                   <h6>Total Products</h6>
-                  <span className="fs-4 text-primary">120</span>
+                  <span className="fs-4 text-primary">{product}</span>
                 </div>
               </div>
               <div className="col-sm-4">
                 <div className="card text-center p-3">
                   <h6>Total Orders</h6>
-                  <span className="fs-4 text-success">78</span>
+                  <span className="fs-4 text-success">{order}</span>
                 </div>
               </div>
               <div className="col-sm-4">
                 <div className="card text-center p-3">
                   <h6>Registered Users</h6>
-                  <span className="fs-4 text-info">45</span>
+                  <span className="fs-4 text-info">{user}</span>
                 </div>
               </div>
             </div>
