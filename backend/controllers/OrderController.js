@@ -116,7 +116,7 @@ const updateOrder = async (req, res) => {
   try {
     const orderId = req.params.oid;
     const userId = req.user.id;
-    const userRole = req.user.role; // assuming role is set in req.user
+    const userRole = req.user.role;
     const { products, shippingInfo, paymentInfo, status, deliveredAt } =
       req.body;
 
@@ -125,23 +125,24 @@ const updateOrder = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    // Check ownership or admin
-    if (order.user.toString() !== userId.toString() && userRole !== 'admin') {
+    // Only owner or admin can update
+    if (order.user.toString() !== userId.toString() && userRole !== "admin") {
       return res
         .status(403)
         .json({ message: "Not authorized to update this order" });
     }
 
+    // Don't allow any updates if order is delivered
     if (
       order.status === "delivered" ||
       (order.deliveredAt && new Date() >= new Date(order.deliveredAt))
     ) {
-      return res.status(400).json({
-        message: "Order cannot be updated after it is delivered",
-      });
+      return res
+        .status(400)
+        .json({ message: "Order cannot be updated after it is delivered" });
     }
 
-    // Role-based field update restrictions
+    // Prevent normal users from changing admin-only fields
     if (userRole !== "admin") {
       if (status || paymentInfo || deliveredAt) {
         return res.status(403).json({
@@ -151,13 +152,9 @@ const updateOrder = async (req, res) => {
       }
     }
 
-   
-
-
-    // Process products if provided
+    // Update products if provided
     if (products) {
       const processedProducts = [];
-
       for (const item of products) {
         const productDoc = await Product.findOne({ name: item.product });
         if (!productDoc) {
@@ -173,19 +170,22 @@ const updateOrder = async (req, res) => {
       order.products = processedProducts;
     }
 
+    // Update fields if provided
     if (shippingInfo) order.shippingInfo = shippingInfo;
-    if (userRole === "admin" && paymentInfo) order.paymentInfo = paymentInfo;
-    if (userRole === "admin" && status) order.status = status;
-    if (userRole === "admin" && deliveredAt) order.deliveredAt = deliveredAt;
+    if (userRole === "admin") {
+      if (status) order.status = status;
+      if (paymentInfo) order.paymentInfo = paymentInfo;
+      if (deliveredAt) order.deliveredAt = deliveredAt;
+    }
 
     const updatedOrder = await order.save();
-
-    res.status(200).json(updatedOrder);
+    return res.status(200).json(updatedOrder);
   } catch (err) {
     console.error("Error updating order:", err);
-    res.status(500).json({ message: err.message || "Server error" });
+    return res.status(500).json({ message: err.message || "Server error" });
   }
 };
+
   
 const countOrders = async (req,res) => {
   try {

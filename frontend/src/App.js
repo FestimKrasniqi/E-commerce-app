@@ -25,6 +25,9 @@ import CreateOrder from "./Components/CreateOrder";
 import MyOrders from "./Components/MyOrders";
 import ManageOrders from "./Components/OrdersAdmin";
 import UpdateOrder from "./Components/UpdateOrder";
+import MyReviews from "./Components/MyReview";
+import PublicOnlyRoute from "./PublicRoutes";
+import AdminReviewsPage from "./Components/AdminReviews";
 
 
 const App = () => {
@@ -37,13 +40,36 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} exact />
 
-        <Route path="/register" element={<Register />} exact />
-        <Route path="/login" element={<Login />} exact />
-        <Route path="/forget" element={<ForgetPassword />} exact />
+        <Route
+          path="/register"
+          element={
+            <PublicOnlyRoute>
+              <Register />
+            </PublicOnlyRoute>
+          }
+          exact
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicOnlyRoute>
+              <Login />
+            </PublicOnlyRoute>
+          }
+          exact
+        />
+        <Route path="/forget" element={ 
+          <PublicOnlyRoute>
+          <ForgetPassword />
+        </PublicOnlyRoute>} exact />
 
         <Route
           path="/reset-password/:token"
-          element={<ResetPassword />}
+          element={
+            <PublicOnlyRoute>
+              <ResetPassword />
+            </PublicOnlyRoute>
+          }
           exact
         />
         {/* Protected Admin Route */}
@@ -119,7 +145,18 @@ const App = () => {
           exact
         />
 
+
         <Route path="/update-order/:id" element={<UpdateOrder />} />
+
+        <Route path="/myreview" element={<MyReviews />} />
+
+        <Route path="/admin/reviews" element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminReviewsPage/>
+          </ProtectedRoute>
+        }
+        exact
+        />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

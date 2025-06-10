@@ -79,8 +79,8 @@ const Home = () => {
               </li>
               {isLoggedIn && (
                 <li className="nav-item">
-                  <Link className="nav-link" to="/products">
-                    Shop
+                  <Link className="nav-link" to="/myreview">
+                    Review
                   </Link>
                 </li>
               )}

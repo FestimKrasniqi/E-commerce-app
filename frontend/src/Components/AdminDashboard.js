@@ -130,10 +130,10 @@ const AdminDashboard = () => {
               📦 View Orders
             </Link>
             <Link
-              to="/admin/reports"
+              to="/admin/reviews"
               className="list-group-item list-group-item-action"
             >
-              📊 Reports & Analytics
+              📊 Reviews
             </Link>
 
             <Link to="/" className="list-group-item list-group-item-action">
