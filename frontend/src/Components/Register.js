@@ -36,7 +36,7 @@ const Register = () => {
     onSubmit: async (values, { resetForm }) => {
       try {
         const response = await fetch(
-          "http://localhost:4000/api/users/register",
+          `${process.env.REACT_APP_API_URLL}/api/users/register`,
           {
             method: "POST",
             headers: {

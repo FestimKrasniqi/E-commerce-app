@@ -13,14 +13,17 @@ const formik = useFormik({
     }),
     onSubmit: async(values, {resetForm}) => {
         try {
-            const response = await fetch('http://localhost:4000/api/users/forget-password', {
-                method: 'POST',
+            const response = await fetch(
+              `${process.env.REACT_APP_API_URL}/api/users/forget-password`,
+              {
+                method: "POST",
                 headers: {
-                     "Content-Type": "application/json",
-                      Accept: "application/json"
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
                 },
-                body: JSON.stringify(formik.values)
-            });
+                body: JSON.stringify(formik.values),
+              }
+            );
 
             if(response.ok) {
                 const data = await response.json()

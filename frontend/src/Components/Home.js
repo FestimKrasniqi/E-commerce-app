@@ -37,7 +37,7 @@ const Home = () => {
       const token = localStorage.getItem("token");
       try {
         const res = await fetch(
-          "http://localhost:4000/api/products/search?limit=4",
+          `${process.env.REACT_APP_API_URL}/api/products/search?limit=4`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -161,16 +161,14 @@ const Home = () => {
               <div className="col-md-3 mb-4" key={product._id}>
                 <div className="card h-100 shadow-sm">
                   <img
-                    src={"http://localhost:4000/" + product.image}
+                    src={`${process.env.REACT_APP_API_URL}/` + product.image}
                     className="card-img-top"
                     alt={product.name}
                     style={{ height: "200px", objectFit: "cover" }}
                   />
                   <div className="card-body">
                     <h5 className="card-title">{product.name}</h5>
-                    <p className="card-text text-muted">
-                      {product.price}€
-                    </p>
+                    <p className="card-text text-muted">{product.price}€</p>
                     <Link
                       to={`/products/${product._id}`}
                       className="btn btn-outline-primary w-100"

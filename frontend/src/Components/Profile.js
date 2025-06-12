@@ -11,7 +11,7 @@ const Profile = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          `http://localhost:4000/api/users/profile/${uid}`,
+          `${process.env.REACT_APP_API_URL}/api/users/profile/${uid}`,
           {
             method: "GET",
             headers: {
@@ -41,13 +41,16 @@ const Profile = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:4000/api/users/delete/${uid}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/users/delete/${uid}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         alert("User deleted successfully");

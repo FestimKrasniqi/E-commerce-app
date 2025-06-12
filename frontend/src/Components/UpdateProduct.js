@@ -18,7 +18,7 @@ const UpdateProduct = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await fetch(
-          `http://localhost:4000/api/products/productinfo/${id}`,
+          `${process.env.REACT_APP_API_URL}/api/products/productinfo/${id}`,
           {
             method: "GET",
             headers: {
@@ -70,7 +70,7 @@ const UpdateProduct = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/products/update/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/products/update/${id}`,
         {
           method: "PATCH",
           headers: {

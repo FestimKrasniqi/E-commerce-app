@@ -92,5 +92,25 @@ userSchema.pre("findOneAndDelete", async function (next) {
   next();
 });
 
+userSchema.pre("save", async function (next) {
+  // Only run if setting role to admin
+  if (this.role !== "admin") return next();
+
+  // If this user is already admin (updating self), allow it
+  if (!this.isNew && this.isModified("role") === false) return next();
+
+  // Count existing admins
+  const adminCount = await mongoose
+    .model("User")
+    .countDocuments({ role: "admin" });
+
+  if (adminCount > 0) {
+    const error = new Error("There can be only one admin user");
+    return next(error);
+  }
+
+  next();
+});
+
 
 module.exports = mongoose.model('User', userSchema);

@@ -25,7 +25,9 @@ const Products = () => {
       if (order) queryParams.append("order", order);
 
       const res = await fetch(
-        `http://localhost:4000/api/products/search?${queryParams.toString()}`,
+        `${
+          process.env.REACT_APP_API_URL
+        }/api/products/search?${queryParams.toString()}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -129,7 +131,7 @@ const Products = () => {
             <div className="col-md-3 mb-4" key={product._id}>
               <div className="card h-100 shadow-sm">
                 <img
-                  src={`http://localhost:4000/${product.image}`}
+                  src={`${process.env.REACT_APP_API_URL}/${product.image}`}
                   className="card-img-top"
                   alt={product.name}
                   style={{ height: "200px", objectFit: "cover" }}

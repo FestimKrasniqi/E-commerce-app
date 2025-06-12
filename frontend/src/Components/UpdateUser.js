@@ -24,7 +24,7 @@ const UpdateUser = () => {
 
       try {
         const response = await fetch(
-          `http://localhost:4000/api/users/profile/${uid}`,
+          `${process.env.REACT_APP_API_URL}/api/users/profile/${uid}`,
           {
             method: "GET",
             headers: {
@@ -70,14 +70,17 @@ const UpdateUser = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://localhost:4000/api/users/update/${uid}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/users/update/${uid}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (response.ok) {
         alert("User updated successfully");

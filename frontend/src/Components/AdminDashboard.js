@@ -28,15 +28,17 @@ const AdminDashboard = () => {
   const fetchUserCount = async () => {
     try {
       const token = localStorage.getItem("token")
-      const response = await fetch('http://localhost:4000/api/users/count', {
-        method : 'GET',
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/users/count`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json()
         setUser(data)
@@ -51,14 +53,17 @@ const AdminDashboard = () => {
   const fetchOrderCount = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:4000/api/orders/count", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/orders/count`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         setOrder(data);
@@ -73,14 +78,17 @@ const AdminDashboard = () => {
   const fetchProductCount = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:4000/api/products/count", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/products/count`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         setProduct(data);
@@ -133,7 +141,7 @@ const AdminDashboard = () => {
               to="/admin/reviews"
               className="list-group-item list-group-item-action"
             >
-              📊 Reviews
+              ⭐ Reviews
             </Link>
 
             <Link to="/" className="list-group-item list-group-item-action">

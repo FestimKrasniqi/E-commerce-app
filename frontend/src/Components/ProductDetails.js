@@ -12,7 +12,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         const res = await fetch(
-          `http://localhost:4000/api/products/productinfo/${id}`,
+          `${process.env.REACT_APP_API_URL}/api/products/productinfo/${id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -34,14 +34,17 @@ const ProductDetails = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch(`http://localhost:4000/api/reviews/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ rating, comment }),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/reviews/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ rating, comment }),
+        }
+      );
 
       const data = await res.json();
 
@@ -70,7 +73,7 @@ const ProductDetails = () => {
       <div className="row">
         <div className="col-md-6">
           <img
-            src={`http://localhost:4000/${product.image}`}
+            src={`${process.env.REACT_APP_API_URL}/` + product.image}
             alt={product.name}
             className="img-fluid rounded shadow"
           />

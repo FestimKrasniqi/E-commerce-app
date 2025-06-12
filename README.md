@@ -1,1 +1,50 @@
-# Bank-System
+# 🛒 E-Commerce App
+
+This is a full-stack E-commerce application built using the MERN stack (MongoDB, Express, React, Node.js). The app allows users to browse products, manage a cart, place orders, and post reviews. Admin users have access to manage all products, users, orders, and reviews through a dedicated dashboard.
+
+---
+
+## 🌐 Tech Stack
+
+- **Frontend**: React.js
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB (with Mongoose ODM)
+- **Authentication**: JSON Web Tokens (JWT)
+- **File Uploads**: Multer (for product images)
+
+---
+
+## 🚀 Features
+
+### 👤 User
+- Register and login
+- JWT-based authentication
+- Update profile information
+- Submit product reviews
+- View and manage their orders
+
+### 🛍️ Product
+- View product details and images
+- Filter/search/sort products
+- Admin: Create, update, delete products
+
+### 📦 Orders
+- Place orders from cart
+- Admin: View all orders
+- Admin/User: Update and view order status
+
+### ⭐ Reviews
+- Users can post one review per product
+- Admins can manage (edit/delete) all reviews
+
+### 🔐 Admin
+- Manage users (edit/delete)
+- View and manage all products
+- View and manage all orders
+- View and manage all reviews
+
+---
+
+
+
+

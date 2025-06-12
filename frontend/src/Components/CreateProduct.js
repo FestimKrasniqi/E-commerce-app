@@ -45,7 +45,7 @@ const CreateProduct = () => {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:4000/api/products/create",
+          `${process.env.REACT_APP_API_URL}/api/products/create`,
           {
             method: "POST",
             headers: {

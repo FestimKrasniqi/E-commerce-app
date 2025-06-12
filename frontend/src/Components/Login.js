@@ -23,14 +23,17 @@ const Login = () => {
 
     onSubmit: async (values, { resetForm }) => {
       try {
-        const response = await fetch("http://localhost:4000/api/users/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(values),
-        });
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/users/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(values),
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();

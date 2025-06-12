@@ -9,7 +9,7 @@ const ManageProducts = () => {
     const fetchProducts = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await fetch("http://localhost:4000/api/products/all", {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/all`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const ManageProducts = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `http://localhost:4000/api/products/delete/${id}`,
+        `${process.env.REACT_APP_API_UR}/api/products/delete/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -104,7 +104,7 @@ const ManageProducts = () => {
                         src={
                           product.image.startsWith("http")
                             ? product.image
-                            : "http://localhost:4000/" + product.image
+                            : `${process.env.REACT_APP_API_URL}/` + product.image
                         }
                         alt={product.name}
                         style={{
@@ -136,8 +136,6 @@ const ManageProducts = () => {
               ))}
             </tbody>
           </table>
-
-          
         </>
       ) : (
         <p>Loading product information...</p>

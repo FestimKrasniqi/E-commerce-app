@@ -9,13 +9,16 @@ const AdminReviewsPage = () => {
   const fetchReviews = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch("http://localhost:4000/api/reviews/all", {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/reviews/all`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
       setReviews(data);
     } catch (err) {
@@ -33,10 +36,13 @@ const AdminReviewsPage = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:4000/api/reviews/delete/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/reviews/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (res.ok) {
         setReviews(reviews.filter((r) => r._id !== id));
       } else {

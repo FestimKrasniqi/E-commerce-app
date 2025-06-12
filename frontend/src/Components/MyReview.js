@@ -10,12 +10,15 @@ const MyReviews = () => {
     const fetchMyReviews = async () => {
       const token = localStorage.getItem("token");
       try {
-        const res = await fetch("http://localhost:4000/api/reviews/my", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/reviews/my`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (res.ok) {
           const data = await res.json();
@@ -50,12 +53,15 @@ const MyReviews = () => {
 
     const token = localStorage.getItem("token");
     try {
-      const res = await fetch(`http://localhost:4000/api/reviews/delete/${reviewId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/reviews/delete/${reviewId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (res.ok) {
         setReviews((prev) => prev.filter((r) => r._id !== reviewId));

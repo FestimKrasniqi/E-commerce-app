@@ -26,11 +26,14 @@ const UpdateOrder = () => {
     const fetchOrder = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:4000/api/orders/orderinfo/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/orders/orderinfo/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (res.ok) {
           const data = await res.json();
@@ -88,14 +91,17 @@ const UpdateOrder = () => {
         delete dataToSend.deliveredAt;
       }
 
-      const res = await fetch(`http://localhost:4000/api/orders/update/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(dataToSend),
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/orders/update/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(dataToSend),
+        }
+      );
 
       if (res.ok) {
         alert("Order updated successfully!");
