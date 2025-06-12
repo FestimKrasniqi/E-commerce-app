@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const Order = require('./Order')
+const Review = require('./Review')
 
 const ProductSchema = new mongoose.Schema(
   {
@@ -35,5 +37,24 @@ const ProductSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+ProductSchema.pre("findOneAndDelete", async function (next) {
+  const product = await this.model.findOne(this.getFilter());
+  if (!product) return next();
+
+  // Delete reviews associated with this product
+  await Review.deleteMany({ product: product._id });
+
+  // Pull the product from all orders
+  await Order.updateMany(
+    { "products.product": product._id },
+    { $pull: { products: { product: product._id } } }
+  );
+
+  // Optionally, delete orders that have no products left
+  await Order.deleteMany({ products: { $size: 0 } });
+
+  next();
+});
 
 module.exports = mongoose.model("Product", ProductSchema);

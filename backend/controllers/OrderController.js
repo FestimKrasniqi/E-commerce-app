@@ -134,9 +134,7 @@ const updateOrder = async (req, res) => {
 
     // Don't allow any updates if order is delivered
     if (
-      order.status === "delivered" ||
-      (order.deliveredAt && new Date() >= new Date(order.deliveredAt))
-    ) {
+      order.status === "delivered" ) {
       return res
         .status(400)
         .json({ message: "Order cannot be updated after it is delivered" });

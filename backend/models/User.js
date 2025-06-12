@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
+const Order = require('./Order')
+const Review = require('./Review')
 
 const userSchema = new mongoose.Schema(
   {
@@ -79,5 +81,16 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 }
+
+userSchema.pre("findOneAndDelete", async function (next) {
+  const user = await this.model.findOne(this.getFilter());
+  if (!user) return next();
+
+  await Order.deleteMany({ user: user._id });
+  await Review.deleteMany({ user: user._id });
+
+  next();
+});
+
 
 module.exports = mongoose.model('User', userSchema);

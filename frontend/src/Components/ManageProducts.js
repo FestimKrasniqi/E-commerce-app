@@ -71,7 +71,12 @@ const ManageProducts = () => {
 
   return (
     <div className="container mt-5">
-      <h2 className="mb-4">Product Information</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-4">Product Information</h2>
+        <button className="btn btn-info" onClick={handleCreate}>
+          Create Product
+        </button>
+      </div>
       {products.length > 0 ? (
         <>
           <table className="table table-bordered">
@@ -132,11 +137,7 @@ const ManageProducts = () => {
             </tbody>
           </table>
 
-          <div className="mt-3">
-            <button className="btn btn-info" onClick={handleCreate}>
-              Create Product
-            </button>
-          </div>
+          
         </>
       ) : (
         <p>Loading product information...</p>
