@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ecommerce-app
+    env: node
+    plan: free
+    buildCommand: npm install && npm run heroku-postbuild
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        value: http://mongodb://mongo:27017/Ecommerce
+      - key: JWT_SECRET
+        value: SECRETTOKEN
