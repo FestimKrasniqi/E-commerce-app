@@ -369,15 +369,15 @@ exports.validateUpdateOrder = [
   body("deliveredAt")
     .optional()
     .isISO8601()
-    .withMessage("DeliveredAt must be a valid date")
-    .custom((value) => {
-      const deliveredDate = new Date(value);
-      const now = new Date();
-      if (deliveredDate <= now) {
-        throw new Error("DeliveredAt must be a future date");
-      }
-      return true;
-    }),
+    .withMessage("DeliveredAt must be a valid date"),
+    // .custom((value) => {
+    //   const deliveredDate = new Date(value);
+    //   const now = new Date();
+    //   if (deliveredDate <= now) {
+    //     throw new Error("DeliveredAt must be a future date");
+    //   }
+    //   return true;
+    // }),
 
   (req, res, next) => {
     const errors = validationResult(req);

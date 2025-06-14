@@ -132,7 +132,7 @@ const updateOrder = async (req, res) => {
         .json({ message: "Not authorized to update this order" });
     }
 
-    // Don't allow any updates if order is delivered
+   
     if (
       order.status === "delivered" ) {
       return res
