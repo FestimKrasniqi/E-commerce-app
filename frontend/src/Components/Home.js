@@ -104,11 +104,11 @@ const Home = () => {
                       Profile
                     </Link>
                   </li>
-                  <li className="nav-item">
+                  {/* <li className="nav-item">
                     <Link className="nav-link" to="/cart">
                       🛒 Cart
                     </Link>
-                  </li>
+                  </li> */}
                   <li className="nav-item">
                     <Link className="nav-link" to="/myorders">
                       📦 My Orders
