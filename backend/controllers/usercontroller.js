@@ -134,7 +134,9 @@ const forgetPassword = async (req, res) => {
 
       await existingUser.save();
 
-      const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+      // console.log(process.env.RESET_PASSWORD);
+
+      const resetUrl = `${process.env.RESET_PASSWORD}/${resetToken}`;
 
       console.log("🔑 Reset Token (use this in Postman):", resetToken);
 
