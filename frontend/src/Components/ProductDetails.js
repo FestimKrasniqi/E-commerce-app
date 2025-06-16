@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link,useNavigate } from "react-router-dom";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -7,8 +7,10 @@ const ProductDetails = () => {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const token = localStorage.getItem("token");
+  const navigate = useNavigate()
 
   useEffect(() => {
+    
     const fetchProduct = async () => {
       try {
         const res = await fetch(
@@ -65,6 +67,10 @@ const ProductDetails = () => {
     return <div className="text-center mt-5">Loading...</div>;
   }
 
+  const handleCreate = () => {
+   navigate('/create-order')
+  }
+
   return (
     <div className="container my-5">
       <Link to="/" className="btn btn-secondary mb-4">
@@ -82,7 +88,9 @@ const ProductDetails = () => {
           <h2>{product.name}</h2>
           <p className="text-muted">{product.price}€</p>
           <p>{product.description}</p>
-          <button className="btn btn-primary mt-3">Add to Cart</button>
+          <button className="btn btn-primary mt-3" onClick={handleCreate}>
+            Order
+          </button>
 
           <hr className="my-4" />
           <h4>Leave a Review</h4>
