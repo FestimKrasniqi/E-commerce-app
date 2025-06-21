@@ -31,6 +31,31 @@ const Home = () => {
     navigate("/login");
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const decoded = jwtDecode(token);
+      const expTime = decoded.exp * 1000; // Convert to ms
+      const now = Date.now();
+      const timeLeft = expTime - now;
+
+      if (timeLeft <= 0) {
+        handleLogout();
+      } else {
+        const logoutTimer = setTimeout(() => {
+          handleLogout();
+        }, timeLeft);
+
+        return () => clearTimeout(logoutTimer); // Cleanup on unmount
+      }
+    } catch (err) {
+      console.error("Error decoding token:", err);
+      handleLogout(); // force logout on decode error
+    }
+  }, []);
+
   // Fetch sample products for homepage
   useEffect(() => {
     const fetchProducts = async () => {
