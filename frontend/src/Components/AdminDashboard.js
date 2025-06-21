@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -18,6 +19,33 @@ const AdminDashboard = () => {
     fetchOrderCount()
     fetchProductCount()
   }, [navigate, token, role]);
+
+  useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+  
+      try {
+        const decoded = jwtDecode(token);
+        const expTime = decoded.exp * 1000; // Convert to ms
+        const now = Date.now();
+        const timeLeft = expTime - now;
+  
+       
+
+        if (timeLeft <= 0) {
+          handleLogout();
+        } else {
+          const logoutTimer = setTimeout(() => {
+            handleLogout();
+          }, timeLeft);
+  
+          return () => clearTimeout(logoutTimer); // Cleanup on unmount
+        }
+      } catch (err) {
+        console.error("Error decoding token:", err);
+        handleLogout(); // force logout on decode error
+      }
+    }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");

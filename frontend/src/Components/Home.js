@@ -41,6 +41,13 @@ const Home = () => {
       const now = Date.now();
       const timeLeft = expTime - now;
 
+      // console.log("⏳ Time left until token expires (ms):", timeLeft);
+      // console.log(
+      //   "⏰ Expires in (minutes):",
+      //   (timeLeft / 1000 / 60).toFixed(2)
+      // );
+
+
       if (timeLeft <= 0) {
         handleLogout();
       } else {

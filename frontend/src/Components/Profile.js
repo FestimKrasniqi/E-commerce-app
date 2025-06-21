@@ -97,7 +97,7 @@ const Profile = () => {
                 <td>{user.profile?.address || "N/A"}</td>
                 <td>{user.profile?.city || "N/A"}</td>
                 <td>{user.profile?.country || "N/A"}</td>
-                <td>{user.profile?.dateOfBirth || "N/A"}</td>
+                <td>{new Date(user.profile?.dateOfBirth).toLocaleDateString() || "N/A"}</td>
               </tr>
             </tbody>
           </table>
