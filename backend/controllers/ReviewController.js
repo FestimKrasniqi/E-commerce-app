@@ -105,10 +105,26 @@ const getMyReviews = async (req,res) => {
     }
 }
 
+const getReviewById = async (req,res) => {
+  try {
+    const reviewId = req.params.id;
+    const review = await Review.findById(reviewId).populate("user","name").populate("product","name");
+    if(!review) {
+      return res.status(404).json({message: "Review not found"});
+    }
+    res.status(200).json(review);
+
+
+  } catch (error) {
+    res.status(500).json({message: "Error fetching review", error: error.message});
+  }
+}
+
 module.exports = {
     createReview,
     getAllReviews,
     updateReview,
     deleteReview,
-    getMyReviews
+    getMyReviews,
+    getReviewById
 }
