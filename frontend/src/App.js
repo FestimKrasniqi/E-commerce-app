@@ -3,8 +3,7 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate
-
+  Navigate,
 } from "react-router-dom";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
@@ -28,13 +27,9 @@ import UpdateOrder from "./Components/UpdateOrder";
 import MyReviews from "./Components/MyReview";
 import PublicOnlyRoute from "./PublicRoutes";
 import AdminReviewsPage from "./Components/AdminReviews";
-
+import UpdateReview from "./Components/UpdateReview";
 
 const App = () => {
-
-
-
-
   return (
     <Router>
       <Routes>
@@ -58,11 +53,15 @@ const App = () => {
           }
           exact
         />
-        <Route path="/forget" element={ 
-          <PublicOnlyRoute>
-          <ForgetPassword />
-        </PublicOnlyRoute>} exact />
-
+        <Route
+          path="/forget"
+          element={
+            <PublicOnlyRoute>
+              <ForgetPassword />
+            </PublicOnlyRoute>
+          }
+          exact
+        />
         <Route
           path="/reset-password/:token"
           element={
@@ -72,7 +71,8 @@ const App = () => {
           }
           exact
         />
-        {/* Protected Admin Route */}
+
+        {/* ✅ Admin Protected Routes */}
         <Route
           path="/admin/dashboard"
           element={
@@ -82,7 +82,6 @@ const App = () => {
           }
           exact
         />
-
         <Route
           path="/admin/manage-users"
           element={
@@ -92,11 +91,6 @@ const App = () => {
           }
           exact
         />
-
-        <Route path="/profile/:uid" element={<Profile />} exact />
-
-        <Route path="/update-user/:uid" element={<UpdateUser />} exact />
-
         <Route
           path="/admin/products"
           element={
@@ -106,7 +100,6 @@ const App = () => {
           }
           exact
         />
-
         <Route
           path="/create-product"
           element={
@@ -116,7 +109,6 @@ const App = () => {
           }
           exact
         />
-
         <Route
           path="/update-product/:id"
           element={
@@ -126,15 +118,6 @@ const App = () => {
           }
           exact
         />
-
-        <Route path="/products/:id" element={<ProductDetails />} exact />
-
-        <Route path="/products" element={<Products />} exact />
-
-        <Route path="/create-order" element={<CreateOrder />} exact />
-
-        <Route path="/myorders" element={<MyOrders />} exact />
-
         <Route
           path="/admin/orders"
           element={
@@ -144,20 +127,86 @@ const App = () => {
           }
           exact
         />
-
-
-        <Route path="/update-order/:id" element={<UpdateOrder />} />
-
-        <Route path="/myreview" element={<MyReviews />} />
-
-        <Route path="/admin/reviews" element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminReviewsPage/>
-          </ProtectedRoute>
-        }
-        exact
+        <Route
+          path="/admin/reviews"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminReviewsPage />
+            </ProtectedRoute>
+          }
+          exact
         />
 
+        {/* ✅ Shared User/Admin Protected Routes */}
+        <Route
+          path="/profile/:uid"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+          exact
+        />
+        <Route
+          path="/update-user/:uid"
+          element={
+            <ProtectedRoute>
+              <UpdateUser />
+            </ProtectedRoute>
+          }
+          exact
+        />
+        <Route
+          path="/create-order"
+          element={
+            <ProtectedRoute>
+              <CreateOrder />
+            </ProtectedRoute>
+          }
+          exact
+        />
+        <Route
+          path="/myorders"
+          element={
+            <ProtectedRoute>
+              <MyOrders />
+            </ProtectedRoute>
+          }
+          exact
+        />
+        <Route
+          path="/myreview"
+          element={
+            <ProtectedRoute>
+              <MyReviews />
+            </ProtectedRoute>
+          }
+          exact
+        />
+        <Route
+          path="/update-order/:id"
+          element={
+            <ProtectedRoute>
+              <UpdateOrder />
+            </ProtectedRoute>
+          }
+          exact
+        />
+        <Route
+          path="/update-review/:id"
+          element={
+            <ProtectedRoute>
+              <UpdateReview />
+            </ProtectedRoute>
+          }
+          exact
+        />
+
+        {/* ✅ Public Product Pages */}
+        <Route path="/products/:id" element={<ProductDetails />} exact />
+        <Route path="/products" element={<Products />} exact />
+
+        {/* Redirect all other routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>

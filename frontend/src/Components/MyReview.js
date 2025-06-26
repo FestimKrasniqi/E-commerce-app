@@ -41,7 +41,7 @@ const MyReviews = () => {
   }
 
   const handleEdit = (reviewId) => {
-    
+    console.log("Navigating to update-review with ID:", reviewId);
     navigate(`/update-review/${reviewId}`)
   };
   

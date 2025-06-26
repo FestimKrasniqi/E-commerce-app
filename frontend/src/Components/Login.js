@@ -40,7 +40,7 @@ const Login = () => {
           console.log("Login data", data);
           localStorage.setItem("token", data.token);
           localStorage.setItem("role", data.role);
-          alert("Login successful!");
+          // alert("Login successful!");
           resetForm();
           if(data.role === 'user') {
             navigate('/')

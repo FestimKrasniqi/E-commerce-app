@@ -1,10 +1,12 @@
 // src/pages/AdminReviewsPage.jsx
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const AdminReviewsPage = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   const fetchReviews = async () => {
     try {
@@ -53,6 +55,10 @@ const AdminReviewsPage = () => {
     }
   };
 
+  const handleEdit = (id) => {
+  navigate(`/update-review/${id}`);
+  }
+
   useEffect(() => {
     fetchReviews();
   }, []);
@@ -81,7 +87,7 @@ const AdminReviewsPage = () => {
               <td>{review.comment}</td>
               <td>{new Date(review.createdAt).toLocaleDateString()}</td>
               <td>
-                <button className="btn btn-sm btn-primary me-2" title="Edit">
+                <button className="btn btn-sm btn-primary me-2" title="Edit" onClick={()=> handleEdit(review._id)}>
                   <FaEdit />
                 </button>
                 <button

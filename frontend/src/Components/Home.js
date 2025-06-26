@@ -27,7 +27,7 @@ const Home = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("uid");
-    alert("Logged out successfully");
+    // alert("Logged out successfully");
     navigate("/login");
   };
 
