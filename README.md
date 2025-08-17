@@ -1,6 +1,6 @@
 # 🛒 E-Commerce App
 
-This is a full-stack E-commerce application built using the MERN stack (MongoDB, Express, React, Node.js). The app allows users to browse products, manage a cart, place orders, and post reviews. Admin users have access to manage all products, users, orders, and reviews through a dedicated dashboard.
+This is a full-stack E-commerce application built using the MERN stack (MongoDB, Express, React, Node.js). The app allows users to browse products, place orders, and post reviews. Admin users have access to manage all products, users, orders, and reviews through a dedicated dashboard.
 
 ---
 
