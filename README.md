@@ -62,6 +62,10 @@ cd frontend
 npm start
 
 ---
+## 👨‍💻 Author
+
+- **Festim Krasniqi**  
+  - [GitHub](https://github.com/FestimKrasniqi)
 
 
 
