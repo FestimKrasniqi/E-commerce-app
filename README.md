@@ -64,8 +64,8 @@ npm start
 ---
 ## 👨‍💻 Author
 
-- **Festim Krasniqi**  
-  - [GitHub](https://github.com/FestimKrasniqi)
+
+  - [Festim Krasniqi](https://github.com/FestimKrasniqi)
 
 
 
