@@ -55,7 +55,7 @@ cd ../frontend && npm install
 
 # 3. Run the backend (from backend folder)
 cd backend
-npm run dev
+npm start
 
 # 4. Run the frontend (from frontend folder, in another terminal)
 cd frontend
