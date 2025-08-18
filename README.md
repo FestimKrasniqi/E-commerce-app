@@ -44,7 +44,9 @@ This is a full-stack E-commerce application built using the MERN stack (MongoDB,
 - View and manage all reviews
 
 ---
-### ⚙️ Installation & Setup
+## ⚙️ Installation & Setup
+
+
 # 1. Clone the repository
 git clone https://github.com/FestimKrasniqi/E-commerce-app.git
 cd E-commerce-app
