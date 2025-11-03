@@ -79,7 +79,7 @@ const ProductDetails = () => {
       <div className="row">
         <div className="col-md-6">
           <img
-            src={`${process.env.REACT_APP_API_URL}/` + product.image}
+            src={`{${process.env.REACT_APP_API_URL}/` + product.image}
             alt={product.name}
             className="img-fluid rounded shadow"
           />
