@@ -39,7 +39,7 @@ const ManageProducts = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetch(
-        `${process.env.REACT_APP_API_UR}/api/products/delete/${id}`,
+        `${process.env.REACT_APP_API_URL}/api/products/delete/${id}`,
         {
           method: "DELETE",
           headers: {
